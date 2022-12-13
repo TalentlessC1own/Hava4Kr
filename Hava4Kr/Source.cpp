@@ -5,6 +5,8 @@
 #include "FIleOutputText.h"
 #include "FileInput.h"
 #include "SubStr.h"
+#include <locale>
+#include <Windows.h>
 
 enum class Type
 {
@@ -30,6 +32,9 @@ enum class RepairMenu
 
 int main()
 {
+	setlocale(LC_ALL, "ru_RU.cp1251");
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
 	std::cout << "kHava 415 var 6 kr 4 " << std::endl;
 	RepairMenu repairMenuItem;
 	int interval = 0;
@@ -40,6 +45,7 @@ int main()
 	std::string text = "";
 	Menu menu_item = Menu::none;
 	Type type = Type::none;
+	int step;
 	while (true)
 	{
 
@@ -92,7 +98,10 @@ int main()
 				for (int i = 0; i < (interval - 1); i++)
 				{
 					std::string findSubstring = text.substr(i, substrLen); //выбор подстроки от позиции по количеству замены
-					 int step = CheckSubstr(findSubstring, text, i); //шаг сдвига для поиска следующего фрагмента, пропуск пробелов и знаков препинания
+				
+					step = CheckSubstr(findSubstring, text, i); //шаг сдвига для поиска следующего фрагмента, пропуск пробелов и знаков препинания
+					
+					 
 					if (step > 0) { i += step - 1; continue; }
 					int textStartPos = 0;
 					int sPos = i;
@@ -116,7 +125,9 @@ int main()
 								textStartPos = (int)n;
 							}
 							else
+							{ 
 								changes = СhangeText((int)n, textStartPos, substrLen, text, gHooks);
+							}
 
 							sPos = static_cast<int>(n) + substrLen;
 						}

@@ -37,9 +37,9 @@ int ÑhangeText(int begin, int starPos, int length, std::string& text, bool& gHoo
 	std::string chText;
 
 	if (gHooks == true)
-		chText = "[" + std::to_string(starPos) + ", " + std::to_string(length) + "]";
+		chText = "[" + std::to_string(starPos + 1) + ", " + std::to_string(length) + "]";
 	else
-		chText = "{" + std::to_string(starPos) + ", " + std::to_string(length) + "}";
+		chText = "{" + std::to_string(starPos + 1) + ", " + std::to_string(length) + "}";
 
 	text.replace(begin, length, chText);
 
