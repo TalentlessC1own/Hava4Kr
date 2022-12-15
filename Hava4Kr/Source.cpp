@@ -32,17 +32,18 @@ enum class RepairMenu
 
 int main()
 {
-	setlocale(LC_ALL, "ru_RU.cp1251");
-	SetConsoleOutputCP(1251);
-	SetConsoleCP(1251);
+	setlocale(LC_ALL, "Russian");
+	SetConsoleCP(1251); 
+	SetConsoleOutputCP(1251); 
 	std::cout << "kHava 415 var 6 kr 4 " << std::endl;
 	RepairMenu repairMenuItem;
 	int interval = 0;
-	setlocale(LC_ALL, "ru_RU.cp1251");
 	const int Yes = 1;
 	bool gHooks = false;
 	int substrLen;
 	std::string text = "";
+	std::string changedText = "";
+	std::string repairedText = "";
 	Menu menu_item = Menu::none;
 	Type type = Type::none;
 	int step;
@@ -64,12 +65,14 @@ int main()
 			switch (type)
 			{
 			case Type::console:
+				text.clear();
 				InputText(&text);
 				std::cout << "Save to file?\n1.Yes\n2.No" << std::endl;
 				if (CheckMenu(2) == Yes)
 					FileOutputText(text);
 				break;
 			case Type::file:
+				text.clear();
 				FileInput(&text);
 				break;
 			}
@@ -81,11 +84,11 @@ int main()
 				std::cout << "Enter text first" << std::endl;
 				break;
 			}
-			
+			changedText.clear();
 			std::cout << "Initial text: " << text << std::endl;
 			std::cout << std::endl << "Characters: " << text.length() << "\nEnter the length of the substring.  " << std::endl;;
 			substrLen = CheckIntValue();
-
+			changedText = text;
 			interval = static_cast<int>(text.length()) - substrLen;
 			if (interval <= 0)
 			{
@@ -93,13 +96,13 @@ int main()
 				break;
 			}
 			else {
-				gHooks = Staples(text, '{');
+				gHooks = Staples(changedText, '{');
 
 				for (int i = 0; i < (interval - 1); i++)
 				{
-					std::string findSubstring = text.substr(i, substrLen); //выбор подстроки от позиции по количеству замены
+					std::string findSubstring = changedText.substr(i, substrLen); //выбор подстроки от позиции по количеству замены
 				
-					step = CheckSubstr(findSubstring, text, i); //шаг сдвига для поиска следующего фрагмента, пропуск пробелов и знаков препинания
+					step = CheckSubstr(findSubstring, changedText, i); //шаг сдвига для поиска следующего фрагмента, пропуск пробелов и знаков препинания
 					
 					 
 					if (step > 0) { i += step - 1; continue; }
@@ -108,7 +111,7 @@ int main()
 					int changes = 0;
 					bool count = false;
 					do {
-						std::string::size_type n = text.find(findSubstring, sPos);
+						std::string::size_type n = changedText.find(findSubstring, sPos);
 						if (n == std::string::npos) 
 						{
 							if (changes > 0)
@@ -126,7 +129,7 @@ int main()
 							}
 							else
 							{ 
-								changes = СhangeText((int)n, textStartPos, substrLen, text, gHooks);
+								changes = СhangeText((int)n, textStartPos, substrLen, changedText, gHooks);
 							}
 
 							sPos = static_cast<int>(n) + substrLen;
@@ -135,11 +138,11 @@ int main()
 					} while (true);
 				}
 
-				std::cout << "Chenged: " << text << std::endl;
+				std::cout << "Chenged: " << changedText << std::endl;
 
 				std::cout << "Save to file?\n1.Yes\n2.No"<< std::endl;
 				if (CheckMenu(2) == Yes)
-					FileOutputText(text);
+					FileOutputText(changedText);
 				break;
 			}
 		case Menu::repair:
@@ -148,22 +151,24 @@ int main()
 			switch (repairMenuItem)
 			{
 			case RepairMenu::InputFile:
-				text.clear();
-				FileInput(&text);
+				changedText.clear();
+				repairedText.clear();
+				FileInput(&repairedText);
 				break;
 			case RepairMenu::UseEntered:
-				if (text.empty() )
+				if (changedText.empty() )
 				{
 					std::cout << "No text entered" << std::endl;
 					continue;
 				}
+				repairedText = changedText;
 			}
-			std::cout << "Initial text:\t " << text << std::endl;
-			RepairStartText(text);
-			std::cout << "Changed text:\t" << text << std::endl;
+			std::cout << "Initial text:\t " << repairedText << std::endl;
+			RepairStartText(repairedText);
+			std::cout << "Changed text:\t" << repairedText << std::endl;
 			std::cout << "Save to file?\n1.Yes\n2.No" << std::endl;
 			if (CheckMenu(2) == Yes)
-				FileOutputText(text);
+				FileOutputText(repairedText);
 			break;
 		case Menu::out:
 			return 0;

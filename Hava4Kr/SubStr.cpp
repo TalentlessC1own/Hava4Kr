@@ -89,7 +89,7 @@ int RepairStartText(std::string& repText)
 		if (startPos == -1 || endPos == -1)break;
 		mPos = static_cast<int>(tempText.find(','));
 		dl = mPos - startPos;
-		num1 = stoi(tempText.substr(startPos + 1, dl));
+		num1 = stoi(tempText.substr(startPos + 1, dl)) - 1;
 		dl = endPos - mPos - 1;
 		len = stoi(tempText.substr(mPos + 1, dl)); 
 		changeText = repText.substr(num1, len);
